@@ -4,7 +4,10 @@ describe ("Game", function() {
 	beforeEach(function(){
 		player1 = new Player("female");
 		player2 = new Player("female");
+		player5 = new Player("female");
+		player6 = new Player("female");
 		game = new Game(player1, player2);
+		game2 = new Game(player1, player2, player5, player6);
 	});
 
 describe("Points", function(){
@@ -304,11 +307,135 @@ expect(player3.score).toEqual(0);
 })
 
 
+}) // end of match
 
+describe("special points", function(){
 
+it("should return set point if one game or more up and next point gives you 6", function(){
+	player1.games = 5;
+	player2.games = 4;
+	player1.score = 3;
+	expect(game.specialPoints()).toEqual("Set Point");
 
 })
 
+it("should return set point if it goes to a tiebreak and 6-5", function(){
+	player1.games = 6;
+	player2.games = 6;
+	player1.tiebreak =6;
+	player2.tiebreak = 5;
+	expect(game.specialPoints()).toEqual("Set Point");
+	})
+
+it("should not return set point if 11-11 at tiebreak", function(){
+	player1.games = 6;
+	player2.games = 6;
+	player1.tiebreak = 11;
+	player2.tiebreak = 11;
+	expect(game.specialPoints()).not.toEqual("Set Point");
+
+})
+
+it("should return set point at 6-5 and 40-0", function(){
+	player1.games = 6;
+	player2.games = 5;
+	player1.score = 3;
+	expect(game.specialPoints()).toEqual("Set Point");
+})
+
+it("should not return set point at 40-40", function(){
+	player1.games = 5;
+	player2.games = 4;
+	player1.score = 3;
+	player2.score = 3;
+	expect(game.specialPoints()).not.toEqual("Set Point");
+})
+//match points
+
+it("should return match point if two sets up for female and 5-4 40-0", function(){
+	player1.sets = 1;
+	player1.games = 5;
+	player2.games = 4;
+	player1.score = 3;
+	expect(game.specialPoints()).toEqual("Match Point");
+})
+
+it("should return match point if 1-1 sets, female and 6-5 tie break", function(){
+	player1.sets = 1;
+	player2.sets = 2;
+	player1.games = 6;
+	player2.games = 6;
+	player1.tiebreak = 6;
+	player2.tiebreak = 5;
+	expect(game.specialPoints()).toEqual("Match Point");
+})
+
+it("should not return return match point if male, one set up for male and 40-0", function(){
+	player3 = new Player("male");
+	player4 = new Player("male");
+	game1 = new Game(player3, player4);
+	player3.sets=1;
+	player3.games = 5;
+	player3.score = 3;
+	expect(game1.specialPoints()).toEqual("Set Point");
+})
+
+it("should return return match point if male, two set up for male and 40-0", function(){
+	player3 = new Player("male");
+	player4 = new Player("male");
+	game1 = new Game(player3, player4);
+	player3.sets=2;
+	player3.games = 5;
+	player3.score = 3;
+	expect(game1.specialPoints()).toEqual("Match Point");
+})
+
+
+}) // end of special points
+
+
+describe("doubles", function(){
+
+	it("should have a method for player 3", function(){
+		expect(game2.player3).toEqual(player5);
+	})
+
+	it("should have a method for player 4", function(){
+		expect(game2.player3).toEqual(player5);
+	})
+
+	it("should add points to player 1 if player 3 wins a point", function(){
+		game2.winPoint(game2.player3);
+		expect(game2.player3.score).toEqual(0);
+		expect(game2.player1.score).toEqual(1);
+	})
+
+	it("should add points to player 2 if player 4 wins a point", function(){
+		game2.winPoint(game2.player4);
+		expect(game2.player4.score).toEqual(0);
+		expect(game2.player2.score).toEqual(1);
+	})
+
+	it("should have a score of 1-0 if player 3 wins four points in a row", function(){
+			game2.winPoint(game2.player3);
+			game2.winPoint(game2.player3);
+			game2.winPoint(game2.player3);
+			game2.winPoint(game2.player3);
+			expect(game2.games()).toEqual("1-0");
+
+	})
+
+	it("should have a set point if 5-4 and player 3 wins 3 points", function(){
+		player1.games = 5;
+		player2.games = 4;
+		game2.winPoint(game2.player3);
+		game2.winPoint(game2.player3);
+		game2.winPoint(game2.player3);
+		expect(game2.specialPoints()).toEqual("Set Point");
+
+	})
+
+})
 
 }) //end of overarching describe
 
