@@ -7,6 +7,7 @@ describe ("Game", function() {
 		game = new Game(player1, player2);
 	});
 
+describe("Points", function(){
 it("has a player1 method",function(){
 	expect(game.player1).toBe(player1);
 });
@@ -92,10 +93,88 @@ it("should go to 40-40 when it is advantage 40 and player2 wins a point", functi
 	expect(game.winPoint(player2)).toEqual("0-0");
 });
 
+})
+
+
+// games
+describe("Games", function(){
+
+it("should return the games each player has won when", function(){
+	expect(game.games()).toEqual("0-0");
+})
+
+it("should return 1-0 when player1 has won one game", function(){
+	game.player1.addGame();
+	expect(game.games()).toEqual("1-0");
+})
+
+it("should return 1-0 when player1 has won 4 points in a row", function(){
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	expect(game.games()).toEqual("1-0");
+})
+
+it("should return 1-1 when player1 has won 4 points in a row and then p2 wins 4 points", function(){
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player2);
+	game.winPoint(player2);
+	game.winPoint(player2);
+	game.winPoint(player2);
+	expect(game.games()).toEqual("1-1");
+})
+
+
+}) // end of describe games
+
+
+//sets
+describe("Sets", function(){
+it("should return the sets each player has, this should be 0-0", function(){
+	expect(game.sets()).toEqual("0-0");
+})
+
+it("should return 1-0 when a player has won a set", function(){
+	game.player1.addSet();
+	expect(game.sets()).toEqual("1-0");
+})
+
+it("should return 1-0 when a player has won six games in a row", function(){
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	game.winPoint(player1);
+	expect(game.sets()).toEqual("1-0");
+	
+})
+
+}) // end of describe sets
 
 
 
-
-
-}); 
+}) //end of overarching describe
 
