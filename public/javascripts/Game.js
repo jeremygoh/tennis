@@ -7,6 +7,24 @@ function Game(p1, p2, p3, p4) {
 	this.player3 = p3;
 	this.player4 = p4;
 	FORMAT = ["0", "15", "30", "40", "ADV"];
+	SINGLESERVERS = [this.player1, this.player2];
+
+	this.server = function(){
+		return SINGLESERVERS[this.initialServer];
+	}
+
+	this.notServer = function(){
+		if(this.initialServer===0)
+		return SINGLESERVERS[this.initialServer + 1];
+		else if(this.initialServer === 1)
+			return SINGLESERVERS[this.initialServer - 1];
+
+	}
+
+	this.changeSingleServer = function(){
+		var lastServer = SINGLESERVERS.shift()
+		SINGLESERVERS.push(lastServer);
+	}
 
 	this.winPoint = function(player){
 
@@ -50,6 +68,7 @@ function Game(p1, p2, p3, p4) {
 				this.player1.score = 0;
 				this.player2.score = 0;
 				player.addGame();
+				this.changeSingleServer();
 				}
 
 
@@ -153,7 +172,18 @@ function Game(p1, p2, p3, p4) {
 			{return this.matchPoint();}
 		else if(this.setPoint())
 			{return this.setPoint();}
+		else if(this.isBreakPoint())
+			{return "Break Point";}
 	}
+
+	this.isBreakPoint = function(){
+	var server = this.server();
+	var notserver = this.notServer();
+	if(this.isGamePoint() && server.score < notserver.score)
+		{return true;}
+	else
+		{return false;}
+}
 
 	this.matchPoint = function(){
 		if(this.player1.sets === 1 && this.setPoint() && this.player1.gender ==="female")
@@ -179,7 +209,7 @@ function Game(p1, p2, p3, p4) {
 		else if (this.player2.games === 6 && this.player1.games === 6 && this.player2.tiebreak>=6 && this.player2.tiebreak-this.player1.tiebreak >= 1)
 			{return "Set Point";}
 		
-	}
+	} 
 
 }
 

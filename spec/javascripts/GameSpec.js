@@ -146,7 +146,8 @@ it("should return 1-0 when a player has won a set", function(){
 	expect(game.sets()).toEqual("1-0");
 })
 
-it("should return 1-0 when a player has won six games in a row", function(){
+//*******
+xit("should return 1-0 when a player has won six games in a row and store this in an array", function(){
 	game.winPoint(player1);
 	game.winPoint(player1);
 	game.winPoint(player1);
@@ -172,6 +173,7 @@ it("should return 1-0 when a player has won six games in a row", function(){
 	game.winPoint(player1);
 	game.winPoint(player1);
 	expect(game.sets()).toEqual("1-0");
+	expect(game.storedSets).toEqual(["6-0"]);
 	
 })
 
@@ -197,19 +199,6 @@ it("should allow a 7-5 victory to give a set of 1-0", function()
 	expect(game.sets()).toEqual("1-0");
 })
 
-xit("should not win a set if it is 6-6 and then a player wins two games", function(){
-	player1.games = 6;
-	player2.games = 6;
-	game.winPoint(player1);
-	game.winPoint(player1);
-	game.winPoint(player1);
-	game.winPoint(player1);
-	game.winPoint(player1);
-	game.winPoint(player1);
-	game.winPoint(player1);
-	game.winPoint(player1);
-	expect(game.sets()).not.toEqual("1-0");
-})
 
 it("should trigger a tiebreak if it is 6-6 and a player wins a point", function(){
 	player1.games = 6;
@@ -434,6 +423,62 @@ describe("doubles", function(){
 		expect(game2.specialPoints()).toEqual("Set Point");
 
 	})
+
+})
+
+//server
+//initial server of 0 denotes p1
+
+describe("serves", function(){
+
+		it("should have a method for specifying the initial server and this should be the current server", function(){
+			game.initialServer = 0;		// this is player 1 .. never specified it! Don't need to
+			expect(game.server()).toEqual(game.player1);
+			game.winPoint(game.player1);
+			expect(game.notServer()).toEqual(game.player2);
+		})
+
+		it("should change the server to player 2 after a game has been won with p1 as initial", function(){
+			game.initialServer = 0;
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			expect(game.server()).toEqual(game.player2);
+		})
+
+		it("should have p2 as server if initial", function(){
+			game.initialServer = 1;
+			expect(game.server()).toEqual(game.player2);
+		})
+
+
+		it("should change the server to player 2 after a game has been won with p1 as initial", function(){
+			game.initialServer = 1;
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			expect(game.server()).toEqual(game.player1);
+			expect(game.notServer()).toEqual(game.player2);
+		})
+
+		//need to check not server 
+
+		it("should return break point if not current server and about to win a game", function(){
+			game.initialServer = 1;
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			game.winPoint(game.player1);
+			expect(game.specialPoints()).toEqual("Break Point");
+		})
+
+
+
+
+
+
+
 
 })
 
